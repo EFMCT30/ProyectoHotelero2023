@@ -1,9 +1,6 @@
 package pe.edu.cibertec.ProyectoHotelero;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +10,10 @@ import lombok.Setter;
 @Entity
 @Table(name="Prueba")
 public class Prueba {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String Nombre;
     private String apellido;
 
