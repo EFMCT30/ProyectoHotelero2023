@@ -2,10 +2,18 @@ package pe.edu.cibertec.ProyectoHotelero.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "Clientes")
 public class Cliente {
@@ -24,5 +32,10 @@ public class Cliente {
 
     @OneToMany(mappedBy = "cliente")
     private List<Reserva> reservas;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true, nullable = false)
+    private UserEntity user; // Referencia al usuario
+
 }
 
