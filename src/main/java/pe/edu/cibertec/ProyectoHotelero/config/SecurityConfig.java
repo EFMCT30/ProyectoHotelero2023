@@ -9,12 +9,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pe.edu.cibertec.ProyectoHotelero.config.filters.JwtAuthenticationFilter;
@@ -57,16 +54,6 @@ public class SecurityConfig {
                 .build();
     }
 
-//    @Bean
-//    UserDetailsService userDetailsService(){
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(User.withUsername("santiago")
-//                .password("1234")
-//                .roles()
-//                .build());
-//
-//        return manager;
-//    }
 
     @Bean
     PasswordEncoder passwordEncoder(){
