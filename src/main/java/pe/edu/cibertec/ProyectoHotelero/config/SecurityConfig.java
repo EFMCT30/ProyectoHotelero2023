@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +21,6 @@ import pe.edu.cibertec.ProyectoHotelero.config.filters.JwtAuthenticationFilter;
 import pe.edu.cibertec.ProyectoHotelero.config.filters.JwtAuthorizationFilter;
 import pe.edu.cibertec.ProyectoHotelero.service.UserDetailsServiceImpl;
 
-import static org.springframework.security.config.Customizer.withDefaults;
 
 
 @Configuration
@@ -44,7 +44,7 @@ public class SecurityConfig {
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
         return httpSecurity
-                .csrf(config -> config.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/hello").permitAll();
                     auth.anyRequest().authenticated();
