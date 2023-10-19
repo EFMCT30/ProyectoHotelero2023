@@ -15,10 +15,8 @@ public class CreateUserDTO {
     @Email
     @NotBlank
     private String email;
-
     @NotBlank
     private String username;
-
     @NotBlank
     private String password;
     private Set<String> roles;
