@@ -23,13 +23,16 @@ public class HotelController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Hotel> Listhotelbyid(@PathVariable("id")Long hotelId ){
-        Hotel hotels = hotelServices.gethotelbyid(hotelId);
-        if (hotels == null){
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> Listhotelbyid(@PathVariable("id") Long hotelId) {
+        Hotel hotel = hotelServices.gethotelbyid(hotelId);
+        if (hotel == null) {
+            String mensaje = "Hotel no encontrado para el ID proporcionado: " + hotelId;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(mensaje);
+        } else {
+            return ResponseEntity.ok(hotel);
         }
-        return ResponseEntity.ok(hotels);
     }
+
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
