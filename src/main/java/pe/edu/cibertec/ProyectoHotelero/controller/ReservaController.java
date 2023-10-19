@@ -30,43 +30,11 @@ public class ReservaController {
         this.clienteService = clienteService;
     }
 
-
-
     @PostMapping("/crearReserva")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> crearReserva(@RequestBody ReservaDTO reservaDTO) {
-        // El token JWT se verifica en el filtro JwtAuthorizationFilter, por lo que no es necesario aquí.
-
-        // Verificar si la habitación está disponible
-        if (!habitacionService.verificarDisponibilidad(reservaDTO.getHabitacionId())) {
-            return new ResponseEntity<>("La habitación no está disponible", HttpStatus.BAD_REQUEST);
-        }
-
-        // Obtener el nombre de usuario del token JWT desde SecurityContextHolder
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        // Obtener el cliente autenticado
-        Cliente cliente = clienteService.obtenerClientePorNombre(username);
-
-        // Verificar si el cliente existe
-        if (cliente == null) {
-            return new ResponseEntity<>("El cliente no existe", HttpStatus.BAD_REQUEST);
-        }
-
-        // Crear la reserva
-        Reserva reserva = new Reserva();
-        reserva.setFechaInicio(reservaDTO.getFechaInicio());
-        reserva.setFechaFin(reservaDTO.getFechaFin());
-        reserva.setEstado("Pendiente"); // O establece el estado deseado
-        reserva.setPrecioTotal(reservaDTO.getPrecioTotal());
-        reserva.setCliente(cliente);
-        reserva.setComentarios(reservaDTO.getComentarios());
-
-        // Puedes agregar más validaciones y lógica de negocio aquí.
-
-        reservaService.crearReserva(reserva);
-
-        return new ResponseEntity<>("Reserva creada con éxito", HttpStatus.CREATED);
+        String message = reservaService.crearReserva(reservaDTO);
+        return ResponseEntity.ok(message);
     }
 
 }
