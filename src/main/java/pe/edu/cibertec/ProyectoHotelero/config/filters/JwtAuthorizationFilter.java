@@ -33,11 +33,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String tokenHeader = request.getHeader("Authorization");
 
-        if(tokenHeader != null && tokenHeader.startsWith("Bearer ")){
+        if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
             String token = tokenHeader.substring(7);
 
-            if(jwtUtils.isTokenValid(token)){
+            if (jwtUtils.isTokenValid(token)) {
                 String username = jwtUtils.getUsernameFromToken(token);
+
+                // Ahora tienes el username del usuario autenticado en 'username'.
+
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 UsernamePasswordAuthenticationToken authenticationToken =
@@ -46,6 +49,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }

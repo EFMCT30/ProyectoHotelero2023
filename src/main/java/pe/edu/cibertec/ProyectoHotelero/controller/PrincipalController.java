@@ -23,7 +23,7 @@ public class PrincipalController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/hello")
+    @GetMapping("/index")
     public String hello(){
         return "Hello World Not Secured";
     }
