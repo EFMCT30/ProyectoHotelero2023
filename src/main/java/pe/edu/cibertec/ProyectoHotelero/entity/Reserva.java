@@ -32,11 +32,9 @@ public class Reserva {
         @Column(name = "fecha_creacion")
         private Timestamp fechaCreacion;
         private String comentarios;
-
         @ManyToOne
         @JoinColumn(name = "cliente_id")
         private Cliente cliente;
-
         @OneToMany(mappedBy = "reserva")
         private List<ReservaHabitacion> reservaHabitaciones;
 

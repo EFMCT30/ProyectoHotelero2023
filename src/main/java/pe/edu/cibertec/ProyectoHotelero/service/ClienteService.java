@@ -15,9 +15,7 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public Cliente obtenerClientePorNombre(String nombre) {
-        return clienteRepository.findByNombre(nombre);
-    }
+    public Cliente obtenerClienteUserId(Long id) {return clienteRepository.findByUser_Id(id);}
 
     public Cliente crearCliente(Cliente cliente) {
         // Agrega lógica para crear un nuevo cliente en la base de datos
