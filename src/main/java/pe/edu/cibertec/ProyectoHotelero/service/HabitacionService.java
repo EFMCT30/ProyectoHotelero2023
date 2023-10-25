@@ -71,5 +71,8 @@ public class HabitacionService {
     }
 
 
+    public void actualizarHabitacion(Habitacion habitacion) {
+        habitacionRepository.save(habitacion);
+    }
 }
 

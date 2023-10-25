@@ -1,5 +1,7 @@
 package pe.edu.cibertec.ProyectoHotelero.controller;
 
+import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,25 +14,25 @@ import pe.edu.cibertec.ProyectoHotelero.service.ClienteService;
 import pe.edu.cibertec.ProyectoHotelero.service.HabitacionService;
 import pe.edu.cibertec.ProyectoHotelero.service.ReservaService;
 @RestController
+@AllArgsConstructor
 @RequestMapping("/reservas")
 public class ReservaController {
 
+    @Autowired
     private final ReservaService reservaService;
+    @Autowired
     private final HabitacionService habitacionService;
+    @Autowired
     private final ClienteService clienteService;
 
-    @Autowired
-    public ReservaController(ReservaService reservaService, HabitacionService habitacionService, ClienteService clienteService) {
-        this.reservaService = reservaService;
-        this.habitacionService = habitacionService;
-        this.clienteService = clienteService;
-    }
 
-    @PostMapping("/crearReserva")
     @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/crearReserva")
+    @Transactional
     public ResponseEntity<String> crearReserva(@RequestBody ReservaDTO reservaDTO) {
-        String message = reservaService.crearReserva(reservaDTO);
+        String message = String.valueOf( reservaService.crearReserva(reservaDTO));
         return ResponseEntity.ok(message);
     }
+
 
 }

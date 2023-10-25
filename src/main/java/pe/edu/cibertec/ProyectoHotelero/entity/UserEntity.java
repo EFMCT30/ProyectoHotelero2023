@@ -30,8 +30,20 @@ public class UserEntity {
     private String username;
     @NotBlank
     private String password;
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Cliente cliente; // Add this field to reference Cliente
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = RoleEntity.class, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles;
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", roles=" + roles + // Incluye las roles en la representación
+                '}';
+    }
 
 }
