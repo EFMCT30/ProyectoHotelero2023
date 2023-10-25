@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-    Cliente findByUser_Id(Long userId);
+    Cliente findByClienteId(Long userId);
 
 }

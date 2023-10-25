@@ -35,5 +35,15 @@ public class Cliente {
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true, nullable = false)
     private UserEntity user; // Referencia al usuario
 
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "clienteId=" + clienteId +
+                ", nombre='" + nombre + '\'' +
+                ", email='" + email + '\'' +
+                ", activo='" + activo + '\'' +
+                // Otras propiedades aquí
+                '}';
+    }
 }
 
