@@ -1,5 +1,6 @@
 package pe.edu.cibertec.ProyectoHotelero.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.HabitacionDTO;
@@ -15,17 +16,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class HabitacionService {
 
+    @Autowired
     private final HabitacionRepository habitacionRepository;
 
+    @Autowired
     private final HotelRepository hotelRepository;
 
-    @Autowired
-    public HabitacionService(HabitacionRepository habitacionRepository, HotelRepository hotelRepository) {
-        this.habitacionRepository = habitacionRepository;
-        this.hotelRepository = hotelRepository;
-    }
+
 
     public Habitacion obtenerHabitacionPorId(Long id) {
         return habitacionRepository.findById(id).orElse(null);
