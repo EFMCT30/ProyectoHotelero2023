@@ -7,9 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -32,13 +33,19 @@ public class Reserva {
         @Column(name = "fecha_creacion")
         private Timestamp fechaCreacion;
         private String comentarios;
-
         @ManyToOne
         @JoinColumn(name = "cliente_id")
         private Cliente cliente;
-
         @OneToMany(mappedBy = "reserva")
         private List<ReservaHabitacion> reservaHabitaciones;
+
+        @ManyToMany
+        @JoinTable(
+                name = "reserva_huespedes",
+                joinColumns = @JoinColumn(name = "reserva_id"),
+                inverseJoinColumns = @JoinColumn(name = "huesped_id")
+        )
+        private Set<Huesped> huespedes;
 
 
 }

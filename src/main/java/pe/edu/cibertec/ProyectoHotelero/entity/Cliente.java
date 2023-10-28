@@ -29,13 +29,21 @@ public class Cliente {
     private Date fechaRegistro;
     private boolean activo;
     private String preferencias;
-
     @OneToMany(mappedBy = "cliente")
     private List<Reserva> reservas;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true, nullable = false)
     private UserEntity user; // Referencia al usuario
 
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "clienteId=" + clienteId +
+                ", nombre='" + nombre + '\'' +
+                ", email='" + email + '\'' +
+                ", activo='" + activo + '\'' +
+                // Otras propiedades aquí
+                '}';
+    }
 }
 
