@@ -14,7 +14,9 @@ public class CorsConfig {
         corsConfiguration.addAllowedOrigin("http://localhost:4200"); // Allow requests from your Angular app
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
-        corsConfiguration.setAllowCredentials(false);
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addExposedHeader("Authorization"); // Add this line to expose the Authorization header
+
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
