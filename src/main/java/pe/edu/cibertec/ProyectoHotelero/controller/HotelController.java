@@ -12,13 +12,13 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/hoteles")
 public class HotelController {
     @Autowired
     private HotelServices hotelServices;
 
     @CrossOrigin
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<Hotel>> Listhotel(){
         List<Hotel> hotels = hotelServices.getallhotel();
