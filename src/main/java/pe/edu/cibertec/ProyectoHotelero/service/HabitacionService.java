@@ -11,6 +11,7 @@ import pe.edu.cibertec.ProyectoHotelero.repository.HotelRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -53,7 +54,9 @@ public class HabitacionService {
         habitacion.setTipo(habitacionDTO.getTipo());
         habitacion.setCapacidad(habitacionDTO.getCapacidad());
         habitacion.setPrecioNoche(habitacionDTO.getPrecioNoche());
-        habitacion.setDisponible(true); // Puedes establecerlo según tus necesidades
+        Random random = new Random();
+        boolean disponible = random.nextBoolean();
+        habitacion.setDisponible(disponible); // Puedes establecerlo según tus necesidades
         habitacion.setFechaUltimaMantenimiento(habitacionDTO.getFechaUltimaMantenimiento());
 
         // Agrega más validaciones y lógica de negocio aquí.
