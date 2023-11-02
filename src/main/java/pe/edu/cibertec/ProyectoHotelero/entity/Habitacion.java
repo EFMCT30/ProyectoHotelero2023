@@ -1,16 +1,20 @@
 package pe.edu.cibertec.ProyectoHotelero.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
 
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -29,6 +33,7 @@ public class Habitacion {
     private Date fechaUltimaMantenimiento;
     @ManyToOne
     @JoinColumn(name = "hotel_id")
+    @JsonIgnore // Evita la serialización de la relación en este lado
     private Hotel hotel;
     @OneToMany(mappedBy = "habitacion")
     private List<ReservaHabitacion> reservaHabitaciones;
