@@ -73,8 +73,8 @@ public class HabitacionService {
     public void eliminarhabitacionid(Long habitacionId) {
         habitacionRepository.deleteById(habitacionId);
     }
-    public void actualizarHabitacion(Habitacion habitacion) {
-        habitacionRepository.save(habitacion);
+    public Habitacion actualizarHabitacion(Habitacion habitacion) {
+        return habitacionRepository.save(habitacion);
     }
 }
 
