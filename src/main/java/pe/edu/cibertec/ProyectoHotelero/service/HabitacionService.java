@@ -6,12 +6,9 @@ import org.springframework.stereotype.Service;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.HabitacionDTO;
 import pe.edu.cibertec.ProyectoHotelero.entity.Habitacion;
 import pe.edu.cibertec.ProyectoHotelero.entity.Hotel;
-import pe.edu.cibertec.ProyectoHotelero.exceptions.HotelNotFoundException;
 import pe.edu.cibertec.ProyectoHotelero.repository.HabitacionRepository;
 import pe.edu.cibertec.ProyectoHotelero.repository.HotelRepository;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,11 +37,11 @@ public class HabitacionService {
     }
 
 
-    public String crearHabitacion(HabitacionDTO habitacionDTO) {
+    public Habitacion crearHabitacion(HabitacionDTO habitacionDTO) {
         // Verificar si el hotel existe
         Optional<Hotel> optionalHotel = hotelRepository.findById(habitacionDTO.getHotelId());
         if (optionalHotel.isEmpty()) {
-            return "No se pudo crear la habitación. El hotel con ID " + habitacionDTO.getHotelId() + " no existe.";
+            System.out.println("No se pudo crear la habitación. El hotel con ID " + habitacionDTO.getHotelId() + " no existe.");
         }
 
         Hotel hotel = optionalHotel.get();
@@ -67,13 +64,12 @@ public class HabitacionService {
         hotel.getHabitaciones().add(habitacion);
         hotelRepository.save(hotel);
 
-        return "Habitación creada con éxito";
+        return habitacion;
     }
 
     public void eliminarhabitacionid(Long habitacionId) {
         habitacionRepository.deleteById(habitacionId);
     }
-
     public void actualizarHabitacion(Habitacion habitacion) {
         habitacionRepository.save(habitacion);
     }

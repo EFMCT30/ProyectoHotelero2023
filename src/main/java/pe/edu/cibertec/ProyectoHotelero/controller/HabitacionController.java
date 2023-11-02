@@ -32,9 +32,9 @@ public class HabitacionController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> crearHabitacion(@RequestBody HabitacionDTO habitacionDTO) {
-        String message = habitacionService.crearHabitacion(habitacionDTO);
-        return ResponseEntity.ok(message);
+    public ResponseEntity<?> crearHabitacion(@RequestBody HabitacionDTO habitacionDTO) {
+        Habitacion habitacion = habitacionService.crearHabitacion(habitacionDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(habitacion);
     }
 
     @DeleteMapping("/{id}")
