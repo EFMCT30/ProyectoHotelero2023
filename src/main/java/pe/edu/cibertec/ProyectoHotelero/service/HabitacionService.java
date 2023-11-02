@@ -70,7 +70,9 @@ public class HabitacionService {
         return "Habitación creada con éxito";
     }
 
-
+    public void eliminarhabitacionid(Long habitacionId) {
+        habitacionRepository.deleteById(habitacionId);
+    }
     public void actualizarHabitacion(Habitacion habitacion) {
         habitacionRepository.save(habitacion);
     }

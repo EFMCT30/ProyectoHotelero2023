@@ -37,7 +37,19 @@ public class HabitacionController {
         return ResponseEntity.ok(message);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteHabitacion(@PathVariable("id") Long habitacionId) {
+        Habitacion habitacion = habitacionService.obtenerHabitacionPorId(habitacionId);
+        if (habitacion == null) {
+            return ResponseEntity.notFound().build();
+        }
 
+        // Use the service to delete the hotel
+        habitacionService.eliminarhabitacionid(habitacionId);
+
+        // Return a 204 No Content response indicating success
+        return ResponseEntity.noContent().build();
+    }
 
 
 }
