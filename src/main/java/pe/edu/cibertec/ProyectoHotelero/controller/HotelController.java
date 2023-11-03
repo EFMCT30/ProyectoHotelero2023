@@ -9,6 +9,7 @@ import pe.edu.cibertec.ProyectoHotelero.entity.Hotel;
 import pe.edu.cibertec.ProyectoHotelero.service.HotelServices;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -61,6 +62,35 @@ public class HotelController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateHotel(@PathVariable("id") Long hotelId, @RequestBody Hotel updatedHotel) {
+        Hotel existingHotel = hotelServices.gethotelbyid(hotelId);
+
+        if (existingHotel == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Update the existing hotel with the new details
+        existingHotel.setNombre(updatedHotel.getNombre());
+        existingHotel.setDireccion(updatedHotel.getDireccion());
+        existingHotel.setTelefono(updatedHotel.getTelefono());
+        existingHotel.setEstrellas(updatedHotel.getEstrellas());
+        existingHotel.setDescripcion(updatedHotel.getDescripcion());
+        existingHotel.setFechaConstruccion(updatedHotel.getFechaConstruccion());
+        existingHotel.setCategoria(updatedHotel.getCategoria());
+
+        // Save the updated hotel
+        Hotel updated = hotelServices.saveOrUpdateHotel(existingHotel);
+
+        if (updated != null) {
+            // Si la actualización fue exitosa, devuelve la respuesta con el hotel actualizado y el código 200 OK.
+            return ResponseEntity.ok(updated);
+        } else {
+            // Si no se pudo actualizar el hotel, devuelve una respuesta de error con el código 500 Internal Server Error u otro código de error adecuado.
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo actualizar el hotel.");
+        }
+    }
+
 
     // Delete a hotel by ID
     @DeleteMapping("/{id}")
@@ -76,4 +106,18 @@ public class HotelController {
         // Return a 204 No Content response indicating success
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/buscar/{nombre}")
+    public ResponseEntity<List<Hotel>> buscarHotelesPorNombre(@PathVariable("nombre") String nombre) {
+        List<Hotel> hoteles = hotelServices.buscarHotelesPorNombre(nombre);
+        return ResponseEntity.ok(hoteles);
+    }
+
+    @GetMapping("/buscarFiltro/{iniciales}")
+    public ResponseEntity<List<Hotel>> buscarHotelesPorIniciales(@PathVariable("iniciales") String iniciales) {
+        List<Hotel> hoteles = hotelServices.buscarHotelesPorIniciales(iniciales);
+        return ResponseEntity.ok(hoteles);
+    }
+
+
 }
