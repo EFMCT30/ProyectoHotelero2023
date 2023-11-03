@@ -8,6 +8,7 @@ import pe.edu.cibertec.ProyectoHotelero.repository.HotelRepository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HotelServices {
@@ -41,6 +42,15 @@ public class HotelServices {
     public void deleteHotelById(Long hotelId) {
         hotelRepository.deleteById(hotelId);
     }
+
+    public List<Hotel> buscarHotelesPorNombre(String nombre) {
+        return hotelRepository.findByNombre(nombre);
+    }
+
+    public List<Hotel> buscarHotelesPorIniciales(String iniciales) {
+        return hotelRepository.findByNombreContainingCustom(iniciales);
+    }
+
 }
 
 
