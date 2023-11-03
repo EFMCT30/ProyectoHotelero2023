@@ -28,7 +28,7 @@ public class Habitacion {
     private String tipo;
     private int capacidad;
     private BigDecimal precioNoche;
-    private boolean disponible;
+    private boolean disponible = true;
     @Column(name = "fecha_ultima_mantenimiento")
     private Date fechaUltimaMantenimiento;
     @ManyToOne

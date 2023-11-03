@@ -20,7 +20,8 @@ public class HotelServices {
     //@RequestMapping
     public Hotel gethotelbyid(Long hotelId){
         return hotelRepository.findById(hotelId).orElse(null);
-    }public Hotel saveOrUpdateHotel(Hotel hotel) {
+    }
+    public Hotel saveOrUpdateHotel(Hotel hotel) {
         return hotelRepository.save(hotel);
     }
     public Hotel createHotelWithBuilder(String nombre, String direccion, String telefono, int estrellas,
