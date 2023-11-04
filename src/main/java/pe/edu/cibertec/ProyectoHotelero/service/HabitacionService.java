@@ -70,6 +70,11 @@ public class HabitacionService {
         return habitacion;
     }
 
+
+    public List<Habitacion> getHabitacionesDisponibles() {
+        return habitacionRepository.findByDisponibleIsTrue();
+    }
+
     public void eliminarhabitacionid(Long habitacionId) {
         habitacionRepository.deleteById(habitacionId);
     }

@@ -76,5 +76,11 @@ public class HabitacionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo actualizar a habitación");
         }
     }
+
+    @GetMapping("/disponibles")
+    public List<Habitacion> getHabitacionesDisponibles() {
+        return habitacionService.getHabitacionesDisponibles();
+    }
+
 }
 
