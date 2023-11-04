@@ -17,7 +17,7 @@ public class ClienteEmergencyContactService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    public void crearClienteEmergencyContact(Long clienteId, ClienteEmergencyContactDTO emergencyContactDTO) {
+    public ClienteEmergencyContactDTO crearClienteEmergencyContact(Long clienteId, ClienteEmergencyContactDTO emergencyContactDTO) {
         Cliente cliente = clienteRepository.findById(clienteId).orElse(null);
 
         if (cliente != null) {
@@ -29,9 +29,28 @@ public class ClienteEmergencyContactService {
             emergencyContact.setAddress(emergencyContactDTO.getAddress());
             emergencyContact.setCliente(cliente);
 
-            clienteEmergencyContactRepository.save(emergencyContact);
+            ClienteEmergencyContact savedEmergencyContact = clienteEmergencyContactRepository.save(emergencyContact);
+
+            // Convertir el objeto savedEmergencyContact a ClienteEmergencyContactDTO si es necesario
+            // y devolverlo
+            return convertToDTO(savedEmergencyContact);
         } else {
-            // Manejo de errores o lanzar una excepción si el cliente no se encuentra
+            // Cliente no encontrado, devolver un valor especial o null
+            return null;
         }
     }
+
+    public ClienteEmergencyContactDTO convertToDTO(ClienteEmergencyContact emergencyContact) {
+        ClienteEmergencyContactDTO dto = new ClienteEmergencyContactDTO();
+        dto.setContactName(emergencyContact.getContactName());
+        dto.setContactPhone(emergencyContact.getContactPhone());
+        dto.setContactEmail(emergencyContact.getContactEmail());
+        dto.setRelationship(emergencyContact.getRelationship());
+        dto.setAddress(emergencyContact.getAddress());
+        // Otros campos que puedas tener en tu DTO
+
+        return dto;
+    }
+
+
 }

@@ -37,9 +37,15 @@ public class ClienteController {
     public ResponseEntity<?> createClientEmergencyContact(
             @PathVariable Long clienteId,
             @RequestBody ClienteEmergencyContactDTO emergencyContactDTO) {
-        clienteEmergencyContactService.crearClienteEmergencyContact(clienteId, emergencyContactDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Contacto de emergencia creado con éxito");
+        ClienteEmergencyContactDTO createdContact = clienteEmergencyContactService.crearClienteEmergencyContact(clienteId, emergencyContactDTO);
+
+        if (createdContact != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdContact);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
+        }
     }
+
 
     @PutMapping("/updateClientInfo/{userId}")
     public ResponseEntity<?> updateClientInfo(@PathVariable Long userId, @RequestBody ClienteUpdateDTO clienteUpdateDTO) {
