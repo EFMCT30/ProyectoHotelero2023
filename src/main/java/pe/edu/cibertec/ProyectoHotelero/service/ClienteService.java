@@ -22,7 +22,9 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    public Cliente obtenerClienteUserId(Long id) {return clienteRepository.findByClienteId(id);}
+    public Cliente findByUserId(Long userId) {
+        return clienteRepository.findByUserId(userId);
+    }
 
     public ResponseEntity<?> updateClientInfo(Long userId, ClienteUpdateDTO clienteUpdateDTO) {
         Cliente cliente = clienteRepository.findByClienteId(userId);

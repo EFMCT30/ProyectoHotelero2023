@@ -14,6 +14,7 @@ import pe.edu.cibertec.ProyectoHotelero.service.HabitacionService;
 import java.util.List;
 
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/habitaciones")
 public class HabitacionController {
 
