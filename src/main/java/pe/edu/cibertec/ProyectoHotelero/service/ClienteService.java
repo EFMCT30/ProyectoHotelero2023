@@ -1,8 +1,10 @@
 package pe.edu.cibertec.ProyectoHotelero.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.ClienteUpdateDTO;
 import pe.edu.cibertec.ProyectoHotelero.entity.Cliente;
@@ -41,7 +43,22 @@ public class ClienteService {
 
         clienteRepository.save(cliente);
 
-        return ResponseEntity.ok("Información del cliente actualizada con éxito");
+        return ResponseEntity.ok(cliente);
+    }
+
+    public Cliente getClienteFromToken(HttpServletRequest request) {
+        // Obten el nombre de usuario (user_id) del token JWT actual
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // Busca al cliente en la base de datos por el nombre de usuario (user_id)
+        Cliente cliente = clienteRepository.findByUserUsername(username);
+
+        // Si se encuentra el cliente, lo retornas; de lo contrario, puedes manejar el error como desees
+        if (cliente != null) {
+            return cliente;
+        } else {
+            return null;
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package pe.edu.cibertec.ProyectoHotelero.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,38 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        }
+    }
+
+    @PutMapping("/updateClientInfo")
+    public ResponseEntity<?> updateClientInfo(@RequestBody ClienteUpdateDTO clienteUpdateDTO) {
+        HttpServletRequest request = null;
+        Cliente cliente = clienteService.getClienteFromToken(request); // Obtiene el cliente desde el token
+
+        if (cliente != null) {
+            ResponseEntity<?> response = clienteService.updateClientInfo(cliente.getClienteId(), clienteUpdateDTO);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return ResponseEntity.ok("Información del cliente actualizada con éxito");
+            } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se pudo obtener la información del cliente desde el token");
+        }
+    }
+
+    @GetMapping("/userInfo")
+    public ResponseEntity<Cliente> getUserInfo(HttpServletRequest request) {
+        // Obtener el usuario actual basado en el token JWT
+        Cliente cliente = clienteService.getClienteFromToken(request);
+
+        if (cliente != null) {
+            return ResponseEntity.ok(cliente);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 
