@@ -1,6 +1,7 @@
 package pe.edu.cibertec.ProyectoHotelero.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,7 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente")
     private List<Reserva> reservas;
     @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true, nullable = false)
     private UserEntity user; // Referencia al usuario
 

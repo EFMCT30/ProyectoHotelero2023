@@ -1,9 +1,9 @@
 package pe.edu.cibertec.ProyectoHotelero.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import pe.edu.cibertec.ProyectoHotelero.entity.Hotel;
 import pe.edu.cibertec.ProyectoHotelero.repository.HotelRepository;
+import org.springframework.stereotype.Service;
 
 
 import java.sql.Date;
@@ -39,6 +39,28 @@ public class HotelServices {
         // Save the newly created hotel entity
         return hotelRepository.save(newHotel);
     }
+
+    //actualizar
+    public Hotel updateHotel(Long hotelId, Hotel updatedHotel) {
+        Hotel existingHotel = gethotelbyid(hotelId);
+
+        if (existingHotel == null) {
+            return null;
+        }
+
+        // Update the existing hotel with the new details
+        existingHotel.setNombre(updatedHotel.getNombre());
+        existingHotel.setDireccion(updatedHotel.getDireccion());
+        existingHotel.setTelefono(updatedHotel.getTelefono());
+        existingHotel.setEstrellas(updatedHotel.getEstrellas());
+        existingHotel.setDescripcion(updatedHotel.getDescripcion());
+        existingHotel.setFechaConstruccion(updatedHotel.getFechaConstruccion());
+        existingHotel.setCategoria(updatedHotel.getCategoria());
+
+        // Save the updated hotel
+        return saveOrUpdateHotel(existingHotel);
+    }
+
     // Method to delete a hotel by ID
     public void deleteHotelById(Long hotelId) {
         hotelRepository.deleteById(hotelId);

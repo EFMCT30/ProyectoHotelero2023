@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.ClienteEmergencyContactDTO;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.ClienteUpdateDTO;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/cliente")
 public class ClienteController {
 
@@ -33,13 +35,32 @@ public class ClienteController {
         }
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<Cliente> getClienteByUserId(@PathVariable Long userId) {
+        Cliente cliente = clienteService.findByUserId(userId);
+        if (cliente != null) {
+            return ResponseEntity.ok(cliente);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+
+
+
     @PostMapping("/createClientEmergencyContact/{clienteId}")
     public ResponseEntity<?> createClientEmergencyContact(
             @PathVariable Long clienteId,
             @RequestBody ClienteEmergencyContactDTO emergencyContactDTO) {
-        clienteEmergencyContactService.crearClienteEmergencyContact(clienteId, emergencyContactDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Contacto de emergencia creado con éxito");
+        ClienteEmergencyContactDTO createdContact = clienteEmergencyContactService.crearClienteEmergencyContact(clienteId, emergencyContactDTO);
+
+        if (createdContact != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdContact);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
+        }
     }
+
 
     @PutMapping("/updateClientInfo/{userId}")
     public ResponseEntity<?> updateClientInfo(@PathVariable Long userId, @RequestBody ClienteUpdateDTO clienteUpdateDTO) {

@@ -64,31 +64,16 @@ public class HotelController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateHotel(@PathVariable("id") Long hotelId, @RequestBody Hotel updatedHotel) {
-        Hotel existingHotel = hotelServices.gethotelbyid(hotelId);
-
-        if (existingHotel == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        // Update the existing hotel with the new details
-        existingHotel.setNombre(updatedHotel.getNombre());
-        existingHotel.setDireccion(updatedHotel.getDireccion());
-        existingHotel.setTelefono(updatedHotel.getTelefono());
-        existingHotel.setEstrellas(updatedHotel.getEstrellas());
-        existingHotel.setDescripcion(updatedHotel.getDescripcion());
-        existingHotel.setFechaConstruccion(updatedHotel.getFechaConstruccion());
-        existingHotel.setCategoria(updatedHotel.getCategoria());
-
-        // Save the updated hotel
-        Hotel updated = hotelServices.saveOrUpdateHotel(existingHotel);
+        ResponseEntity<?> response;
+        Hotel updated = hotelServices.updateHotel(hotelId, updatedHotel);
 
         if (updated != null) {
-            // Si la actualización fue exitosa, devuelve la respuesta con el hotel actualizado y el código 200 OK.
-            return ResponseEntity.ok(updated);
+            response = ResponseEntity.ok(updated);
         } else {
-            // Si no se pudo actualizar el hotel, devuelve una respuesta de error con el código 500 Internal Server Error u otro código de error adecuado.
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo actualizar el hotel.");
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo actualizar el hotel.");
         }
+
+        return response;
     }
 
 
@@ -118,6 +103,7 @@ public class HotelController {
         List<Hotel> hoteles = hotelServices.buscarHotelesPorIniciales(iniciales);
         return ResponseEntity.ok(hoteles);
     }
+    //GABIREL GIL
 
 
 }
