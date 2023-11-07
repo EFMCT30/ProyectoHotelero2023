@@ -72,6 +72,7 @@ public class HotelServices {
     public List<Hotel> buscarHotelesPorIniciales(String iniciales) {
         return hotelRepository.findByNombreContainingCustom(iniciales);
     }
+    //ARREGLAR SERVICE
 
 }
 
