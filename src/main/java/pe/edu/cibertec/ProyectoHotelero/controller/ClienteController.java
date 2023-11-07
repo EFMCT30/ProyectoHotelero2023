@@ -52,18 +52,18 @@ public class ClienteController {
 
 
 
-    @PostMapping("/createClientEmergencyContact/{clienteId}")
-    public ResponseEntity<?> createClientEmergencyContact(
-            @PathVariable Long clienteId,
-            @RequestBody ClienteEmergencyContactDTO emergencyContactDTO) {
-        ClienteEmergencyContactDTO createdContact = clienteEmergencyContactService.crearClienteEmergencyContact(clienteId, emergencyContactDTO);
-
-        if (createdContact != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdContact);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
-        }
-    }
+//    @PostMapping("/createClientEmergencyContact/{clienteId}")
+//    public ResponseEntity<?> createClientEmergencyContact(
+//            @PathVariable Long clienteId,
+//            @RequestBody ClienteEmergencyContactDTO emergencyContactDTO) {
+//        ClienteEmergencyContactDTO createdContact = clienteEmergencyContactService.crearClienteEmergencyContact(clienteId, emergencyContactDTO);
+//
+//        if (createdContact != null) {
+//            return ResponseEntity.status(HttpStatus.CREATED).body(createdContact);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
+//        }
+//    }
 
 
 //    @PutMapping("/updateClientInfo/{userId}")
@@ -78,6 +78,26 @@ public class ClienteController {
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
 //        }
 //    }
+
+    @PostMapping("/createClientEmergencyContact")
+    public ResponseEntity<?> createClientEmergencyContact(
+            @RequestBody ClienteEmergencyContactDTO emergencyContactDTO,
+            HttpServletRequest request) {
+        // Obtener el cliente desde el token
+        Cliente cliente = clienteService.getClienteFromToken(request);
+
+        if (cliente != null) {
+            ClienteEmergencyContactDTO createdContact = clienteEmergencyContactService.crearClienteEmergencyContact(cliente.getClienteId(), emergencyContactDTO);
+
+            if (createdContact != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(createdContact);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el contacto de emergencia");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se pudo obtener la información del cliente desde el token");
+        }
+    }
 
     @PutMapping("/updateClientInfo")
     public ResponseEntity<?> updateClientInfo(@RequestBody ClienteUpdateDTO clienteUpdateDTO,HttpServletRequest request) {
