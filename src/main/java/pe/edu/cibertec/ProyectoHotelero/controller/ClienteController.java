@@ -85,7 +85,7 @@ public class ClienteController {
             ResponseEntity<?> response = clienteService.updateClientInfo(cliente.getClienteId(), clienteUpdateDTO);
 
             if (response.getStatusCode() == HttpStatus.OK) {
-                return ResponseEntity.ok("Información del cliente actualizada con éxito");
+                return ResponseEntity.ok(response);
             } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
             } else {
