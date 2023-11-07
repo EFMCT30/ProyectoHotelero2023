@@ -53,4 +53,8 @@ public class ClienteEmergencyContactService {
     }
 
 
+    public ClienteEmergencyContact buscarPorClienteId(Cliente cliente) {
+        // Hacer uso del método de búsqueda en la interfaz
+        return clienteEmergencyContactRepository.findByCliente(cliente);
+    }
 }

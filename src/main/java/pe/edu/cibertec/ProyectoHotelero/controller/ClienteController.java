@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.ClienteEmergencyContactDTO;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.ClienteUpdateDTO;
 import pe.edu.cibertec.ProyectoHotelero.entity.Cliente;
+import pe.edu.cibertec.ProyectoHotelero.entity.ClienteEmergencyContact;
 import pe.edu.cibertec.ProyectoHotelero.service.ClienteEmergencyContactService;
 import pe.edu.cibertec.ProyectoHotelero.service.ClienteService;
 
@@ -130,6 +131,27 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+
+    @GetMapping("/userInfoContact")
+    public ResponseEntity<ClienteEmergencyContact> getUserInfoContact(HttpServletRequest request) {
+        // Obtener el cliente basado en el token JWT
+        Cliente cliente = clienteService.getClienteFromToken(request);
+
+        if (cliente != null) {
+            // Buscar la información de contacto de emergencia del cliente obtenido del token
+            ClienteEmergencyContact clienteEmergencyContact = clienteEmergencyContactService.buscarPorClienteId(cliente);
+
+            if (clienteEmergencyContact != null) {
+                return ResponseEntity.ok(clienteEmergencyContact);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+
 
 
 }
