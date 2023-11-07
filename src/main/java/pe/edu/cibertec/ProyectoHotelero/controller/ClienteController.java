@@ -2,6 +2,7 @@ package pe.edu.cibertec.ProyectoHotelero.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,14 @@ import pe.edu.cibertec.ProyectoHotelero.entity.Cliente;
 import pe.edu.cibertec.ProyectoHotelero.service.ClienteEmergencyContactService;
 import pe.edu.cibertec.ProyectoHotelero.service.ClienteService;
 
+import java.io.Console;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/cliente")
+@Slf4j
 public class ClienteController {
 
     @Autowired
@@ -63,37 +66,37 @@ public class ClienteController {
     }
 
 
-    @PutMapping("/updateClientInfo/{userId}")
-    public ResponseEntity<?> updateClientInfo(@PathVariable Long userId, @RequestBody ClienteUpdateDTO clienteUpdateDTO) {
-        ResponseEntity<?> response = clienteService.updateClientInfo(userId, clienteUpdateDTO);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return ResponseEntity.ok("Información del cliente actualizada con éxito");
-        } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
-        }
-    }
+//    @PutMapping("/updateClientInfo/{userId}")
+//    public ResponseEntity<?> updateClientInfo(@PathVariable Long userId, @RequestBody ClienteUpdateDTO clienteUpdateDTO) {
+//        ResponseEntity<?> response = clienteService.updateClientInfo(userId, clienteUpdateDTO);
+//
+//        if (response.getStatusCode() == HttpStatus.OK) {
+//            return ResponseEntity.ok("Información del cliente actualizada con éxito");
+//        } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
+//        } else {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+//        }
+//    }
 
     @PutMapping("/updateClientInfo")
-    public ResponseEntity<?> updateClientInfo(@RequestBody ClienteUpdateDTO clienteUpdateDTO) {
-        HttpServletRequest request = null;
+    public ResponseEntity<?> updateClientInfo(@RequestBody ClienteUpdateDTO clienteUpdateDTO,HttpServletRequest request) {
         Cliente cliente = clienteService.getClienteFromToken(request); // Obtiene el cliente desde el token
 
         if (cliente != null) {
-            ResponseEntity<?> response = clienteService.updateClientInfo(cliente.getClienteId(), clienteUpdateDTO);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return ResponseEntity.ok(response);
-            } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
-            }
+            ResponseEntity<?> response = clienteService.updateClientInfo(request,clienteUpdateDTO);
+            log.debug(String.valueOf(response));
+//            if (response.getStatusCode() == HttpStatus.OK) {
+              return ResponseEntity.ok(response);
+//            } else if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
+//            } else {
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+//            }
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se pudo obtener la información del cliente desde el token");
         }
+
     }
 
     @GetMapping("/userInfo")

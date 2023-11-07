@@ -1,5 +1,6 @@
 package pe.edu.cibertec.ProyectoHotelero.controller;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,7 @@ public class PrincipalController {
         return "Hello World Secured";
     }
 
+    @Transactional
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
 

@@ -2,6 +2,7 @@ package pe.edu.cibertec.ProyectoHotelero.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,10 +11,12 @@ import pe.edu.cibertec.ProyectoHotelero.dto.request.ClienteUpdateDTO;
 import pe.edu.cibertec.ProyectoHotelero.entity.Cliente;
 import pe.edu.cibertec.ProyectoHotelero.repository.ClienteRepository;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ClienteService {
 
     @Autowired
@@ -28,9 +31,9 @@ public class ClienteService {
         return clienteRepository.findByUserId(userId);
     }
 
-    public ResponseEntity<?> updateClientInfo(Long userId, ClienteUpdateDTO clienteUpdateDTO) {
-        Cliente cliente = clienteRepository.findByClienteId(userId);
-
+    public ResponseEntity<?> updateClientInfo(HttpServletRequest request, ClienteUpdateDTO clienteUpdateDTO) {
+        Cliente cliente = getClienteFromToken(request);
+        log.error(String.valueOf(cliente));
         if (cliente == null) {
             return ResponseEntity.notFound().build();
         }
@@ -40,6 +43,7 @@ public class ClienteService {
         cliente.setTelefono(clienteUpdateDTO.getTelefono());
         cliente.setDireccion(clienteUpdateDTO.getDireccion());
         cliente.setPreferencias(clienteUpdateDTO.getPreferencias());
+        cliente.setFechaRegistro(clienteUpdateDTO.getFechaRegistro());
 
         clienteRepository.save(cliente);
 
