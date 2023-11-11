@@ -25,38 +25,37 @@ public class ProyectoHoteleroApplication {
 	@Autowired
 	UserRepository userRepository;
 	@Bean
-	CommandLineRunner init(){
-		return  args -> {
-			UserEntity userEntity = UserEntity.builder()
-					.email("cdiazfarfan@gmail.com")
-					.username("cesar")
-					.password(passwordEncoder.encode("1234"))
-					.roles(Set.of(RoleEntity.builder()
-							.name(ERole.valueOf(ERole.ADMIN.name()))
-							.build()))
-					.build();
-			UserEntity userEntity2 = UserEntity.builder()
-					.email("andrea@gmail.com")
-					.username("andrea")
-					.password(passwordEncoder.encode("1234"))
-					.roles(Set.of(RoleEntity.builder()
-							.name(ERole.valueOf(ERole.USER.name()))
-							.build()))
-					.build();
-			UserEntity userEntity3 = UserEntity.builder()
-					.email("pamela@gmail.com")
-					.username("pamela")
-					.password(passwordEncoder.encode("1234"))
-					.roles(Set.of(RoleEntity.builder()
-							.name(ERole.valueOf(ERole.INVITED.name()))
-							.build()))
-					.build();
-			userRepository.save(userEntity);
-			userRepository.save(userEntity2);
-			userRepository.save(userEntity3);
-
-
-
+	CommandLineRunner init(UserRepository userRepository) {
+		return args -> {
+			if (userRepository.count() == 0) {
+				UserEntity userEntity = UserEntity.builder()
+						.email("cdiazfarfan@gmail.com")
+						.username("cesar")
+						.password(passwordEncoder.encode("1234"))
+						.roles(Set.of(RoleEntity.builder()
+								.name(ERole.valueOf(ERole.ADMIN.name()))
+								.build()))
+						.build();
+				UserEntity userEntity2 = UserEntity.builder()
+						.email("andrea@gmail.com")
+						.username("andrea")
+						.password(passwordEncoder.encode("1234"))
+						.roles(Set.of(RoleEntity.builder()
+								.name(ERole.valueOf(ERole.USER.name()))
+								.build()))
+						.build();
+				UserEntity userEntity3 = UserEntity.builder()
+						.email("pamela@gmail.com")
+						.username("pamela")
+						.password(passwordEncoder.encode("1234"))
+						.roles(Set.of(RoleEntity.builder()
+								.name(ERole.valueOf(ERole.INVITED.name()))
+								.build()))
+						.build();
+				userRepository.save(userEntity);
+				userRepository.save(userEntity2);
+				userRepository.save(userEntity3);
+			}
 		};
 	}
 }
