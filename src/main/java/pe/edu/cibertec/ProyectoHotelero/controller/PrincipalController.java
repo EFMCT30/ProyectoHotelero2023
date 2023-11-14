@@ -8,10 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.CreateUserDTO;
-import pe.edu.cibertec.ProyectoHotelero.entity.Cliente;
-import pe.edu.cibertec.ProyectoHotelero.entity.ERole;
-import pe.edu.cibertec.ProyectoHotelero.entity.RoleEntity;
-import pe.edu.cibertec.ProyectoHotelero.entity.UserEntity;
+import pe.edu.cibertec.ProyectoHotelero.entity.*;
+import pe.edu.cibertec.ProyectoHotelero.repository.ClienteEmergencyContactRepository;
 import pe.edu.cibertec.ProyectoHotelero.repository.ClienteRepository;
 import pe.edu.cibertec.ProyectoHotelero.repository.UserRepository;
 
@@ -31,6 +29,9 @@ public class PrincipalController {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private ClienteEmergencyContactRepository clienteEmergencyContactRepository;
+
     @GetMapping("/index")
     public String hello(){
         return "Hello World Not Secured";
@@ -40,6 +41,38 @@ public class PrincipalController {
     public String helloSecured(){
         return "Hello World Secured";
     }
+
+//    @Transactional
+//    @PostMapping("/createUser")
+//    public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
+//
+//        Set<RoleEntity> roles = createUserDTO.getRoles().stream()
+//                .map(role -> RoleEntity.builder()
+//                        .name(ERole.valueOf(role))
+//                        .build())
+//                .collect(Collectors.toSet());
+//
+//        UserEntity userEntity = UserEntity.builder()
+//                .username(createUserDTO.getUsername())
+//                .password(passwordEncoder.encode(createUserDTO.getPassword()))
+//                .email(createUserDTO.getEmail())
+//                .roles(roles)
+//                .build();
+//
+//        userRepository.save(userEntity);
+//
+//        // Crear un nuevo Cliente
+//        Cliente cliente = new Cliente();
+//        cliente.setEmail(userEntity.getEmail()); // Establecer el email del cliente como el email del usuario
+//        cliente.setFechaRegistro(new Date()); // Establecer la fecha de registro
+//        // Asignar el usuario al cliente
+//        cliente.setUser(userEntity);
+//
+//        // Guardar el cliente en la base de datos
+//        clienteRepository.save(cliente);
+//
+//        return ResponseEntity.status(HttpStatus.CREATED).body(userEntity);
+//    }
 
     @Transactional
     @PostMapping("/createUser")
@@ -69,6 +102,14 @@ public class PrincipalController {
 
         // Guardar el cliente en la base de datos
         clienteRepository.save(cliente);
+
+        // Crear automáticamente un contacto de emergencia para el cliente
+        ClienteEmergencyContact emergencyContact = new ClienteEmergencyContact();
+        emergencyContact.setContactName("");
+        emergencyContact.setCliente(cliente);
+
+        // Guardar el contacto de emergencia en la base de datos
+        clienteEmergencyContactRepository.save(emergencyContact);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userEntity);
     }
