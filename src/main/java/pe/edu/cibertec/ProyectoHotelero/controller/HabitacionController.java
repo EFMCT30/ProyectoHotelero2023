@@ -47,7 +47,7 @@ public class HabitacionController {
         boolean success = imageManagerObject.storeFile(file);
         if(success){
             String url = "uploads/images/"+file.getOriginalFilename();
-            //existingHabitacion.setImageUrl(url);
+            existingHabitacion.setImageUrl(url);
             System.out.println(url);
             Habitacion updated = habitacionService.actualizarHabitacion(existingHabitacion);
             if(updated != null){

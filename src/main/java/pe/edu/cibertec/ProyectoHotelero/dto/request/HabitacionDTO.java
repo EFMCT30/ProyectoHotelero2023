@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -20,6 +19,7 @@ public class HabitacionDTO {
     private boolean disponible;
     private BigDecimal precioNoche;
     private Date fechaUltimaMantenimiento;
+    private String imageUrl;
 
     // Constructor, getters y setters
 }
