@@ -11,6 +11,7 @@ import pe.edu.cibertec.ProyectoHotelero.service.HotelServices;
 import java.util.List;
 import java.util.Optional;
 
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 @RestController
 @CrossOrigin
 @RequestMapping("/hoteles")
@@ -19,7 +20,7 @@ public class HotelController {
     private HotelServices hotelServices;
 
     @CrossOrigin
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<Hotel>> Listhotel(){
         List<Hotel> hotels = hotelServices.getallhotel();
@@ -39,7 +40,7 @@ public class HotelController {
 
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> createHotel(@RequestBody Hotel hotel) {
         try {
             if (hotel == null) {
@@ -62,7 +63,7 @@ public class HotelController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/actualizar/{id}")
     public ResponseEntity<?> updateHotel(@PathVariable("id") Long hotelId, @RequestBody Hotel updatedHotel) {
         ResponseEntity<?> response;
         Hotel updated = hotelServices.updateHotel(hotelId, updatedHotel);
@@ -78,7 +79,7 @@ public class HotelController {
 
 
     // Delete a hotel by ID
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> deleteHotel(@PathVariable("id") Long hotelId) {
         Hotel hotel = hotelServices.gethotelbyid(hotelId);
         if (hotel == null) {

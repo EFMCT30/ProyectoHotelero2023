@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.CreateUserDTO;
@@ -14,6 +16,7 @@ import pe.edu.cibertec.ProyectoHotelero.repository.ClienteRepository;
 import pe.edu.cibertec.ProyectoHotelero.repository.UserRepository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -74,6 +77,19 @@ public class PrincipalController {
 //        return ResponseEntity.status(HttpStatus.CREATED).body(userEntity);
 //    }
 
+
+    @GetMapping("/listUser")
+    public ResponseEntity<List<UserEntity>> listUsers() {
+        try {
+            List<UserEntity> users = (List<UserEntity>) userRepository.findAll();
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
@@ -113,6 +129,7 @@ public class PrincipalController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userEntity);
     }
+
 
     @DeleteMapping("/deleteUser")
     public String deleteUser(@RequestParam String id){

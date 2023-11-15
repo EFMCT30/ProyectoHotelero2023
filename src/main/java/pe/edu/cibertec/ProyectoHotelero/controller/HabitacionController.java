@@ -14,7 +14,7 @@ import pe.edu.cibertec.ProyectoHotelero.service.HabitacionService;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 @RequestMapping("/habitaciones")
 public class HabitacionController {
 
@@ -33,7 +33,7 @@ public class HabitacionController {
 
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> crearHabitacion(@RequestBody HabitacionDTO habitacion) {
         Habitacion createdHabitacion = habitacionService.crearHabitacion(habitacion);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdHabitacion);
