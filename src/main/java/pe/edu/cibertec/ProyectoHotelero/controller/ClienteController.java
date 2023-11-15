@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 @RequestMapping("/cliente")
 @Slf4j
 public class ClienteController {
@@ -140,6 +140,7 @@ public class ClienteController {
 
     }
 
+
     @GetMapping("/userInfo")
     public ResponseEntity<Cliente> getUserInfo(HttpServletRequest request) {
         // Obtener el usuario actual basado en el token JWT
@@ -151,6 +152,7 @@ public class ClienteController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+
 
     @GetMapping("/userInfoContact")
     public ResponseEntity<ClienteEmergencyContact> getUserInfoContact(HttpServletRequest request) {
