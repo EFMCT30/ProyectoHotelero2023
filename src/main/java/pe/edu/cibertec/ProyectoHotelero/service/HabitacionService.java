@@ -58,6 +58,7 @@ public class HabitacionService {
         boolean disponible = random.nextBoolean();
         habitacion.setDisponible(disponible); // Puedes establecerlo según tus necesidades
         habitacion.setFechaUltimaMantenimiento(habitacionDTO.getFechaUltimaMantenimiento());
+        habitacion.setImageUrl(habitacionDTO.getImageUrl());
 
         // Agrega más validaciones y lógica de negocio aquí.
 
