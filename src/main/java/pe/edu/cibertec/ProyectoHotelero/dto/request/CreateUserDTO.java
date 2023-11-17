@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.Set;
 
@@ -13,11 +14,9 @@ import java.util.Set;
 public class CreateUserDTO {
 
     @Email
-    @NotBlank
     private String email;
-    @NotBlank
     private String username;
-    @NotBlank
     private String password;
     private Set<String> roles;
+
 }
