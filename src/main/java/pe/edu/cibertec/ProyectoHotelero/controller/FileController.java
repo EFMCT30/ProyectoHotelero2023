@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Controller
+@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 @RequestMapping("/uploads")
 public class FileController {
     private final Path fileStorageLocation = Paths.get("uploads/images");
