@@ -31,6 +31,7 @@ public class Hotel {
     @Column(name = "fecha_construccion")
     private Date fechaConstruccion;
     private String categoria;
+    private boolean disponible = true;
 
     @OneToMany(mappedBy = "hotel")
     private List<Habitacion> habitaciones;

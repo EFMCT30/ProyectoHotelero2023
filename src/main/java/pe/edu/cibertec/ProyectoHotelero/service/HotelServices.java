@@ -24,7 +24,7 @@ public class HotelServices {
         return hotelRepository.save(hotel);
     }
     public Hotel createHotelWithBuilder(String nombre, String direccion, String telefono, int estrellas,
-                                        String descripcion, Date fechaConstruccion, String categoria) {
+                                        String descripcion, Date fechaConstruccion, String categoria, boolean disponible) {
         // Use the @Builder annotation to create a new Hotel object
         Hotel newHotel = Hotel.builder()
                 .nombre(nombre)
@@ -34,6 +34,7 @@ public class HotelServices {
                 .descripcion(descripcion)
                 .fechaConstruccion(fechaConstruccion)
                 .categoria(categoria)
+                .disponible(disponible)
                 .build();
         // Save the newly created hotel entity
         return hotelRepository.save(newHotel);
@@ -55,6 +56,7 @@ public class HotelServices {
         existingHotel.setDescripcion(updatedHotel.getDescripcion());
         existingHotel.setFechaConstruccion(updatedHotel.getFechaConstruccion());
         existingHotel.setCategoria(updatedHotel.getCategoria());
+        existingHotel.setDisponible(updatedHotel.isDisponible());
 
         // Save the updated hotel
         return saveOrUpdateHotel(existingHotel);
