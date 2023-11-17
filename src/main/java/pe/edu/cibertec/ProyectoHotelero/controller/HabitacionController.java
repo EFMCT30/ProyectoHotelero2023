@@ -44,7 +44,11 @@ public class HabitacionController {
     public ResponseEntity<?> actualizarFoto(@PathVariable("id") Long habitacionId, @RequestPart("file") MultipartFile file) throws Exception {
         Habitacion existingHabitacion = habitacionService.obtenerHabitacionPorId(habitacionId);
         ImageManager imageManagerObject = new ImageManager();
-        boolean success = imageManagerObject.storeFile(file);
+        String filename = file.getOriginalFilename();
+        int index = filename.lastIndexOf('.');
+        String extension = filename.substring(index + 1);
+        System.out.println("ESTA es la extension: "+extension);
+        boolean success = extension.equals("jpg") || extension.equals("jepg")? imageManagerObject.storeFile(file) : false;
         if(success){
             String url = "uploads/images/"+file.getOriginalFilename();
             existingHabitacion.setImageUrl(url);
@@ -91,7 +95,6 @@ public class HabitacionController {
         existingHabitacion.setPrecioNoche(updatedHabitacionDTO.getPrecioNoche());
         existingHabitacion.setDisponible(updatedHabitacionDTO.isDisponible());
         existingHabitacion.setFechaUltimaMantenimiento(updatedHabitacionDTO.getFechaUltimaMantenimiento());
-
         Habitacion updated = habitacionService.actualizarHabitacion(existingHabitacion);
 
         if (updated != null) {
