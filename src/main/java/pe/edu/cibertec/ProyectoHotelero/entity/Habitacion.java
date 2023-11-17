@@ -37,5 +37,8 @@ public class Habitacion {
     private Hotel hotel;
     @OneToMany(mappedBy = "habitacion")
     private List<ReservaHabitacion> reservaHabitaciones;
+    @Column(name = "image_url")
+    private String imageUrl;
+
 }
 

@@ -6,11 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pe.edu.cibertec.ProyectoHotelero.dto.request.HabitacionDTO;
 import pe.edu.cibertec.ProyectoHotelero.entity.Habitacion;
-import pe.edu.cibertec.ProyectoHotelero.entity.Hotel;
 import pe.edu.cibertec.ProyectoHotelero.service.HabitacionService;
-
+import pe.edu.cibertec.ProyectoHotelero.util.ImageManager;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -37,6 +38,33 @@ public class HabitacionController {
     public ResponseEntity<?> crearHabitacion(@RequestBody HabitacionDTO habitacion) {
         Habitacion createdHabitacion = habitacionService.crearHabitacion(habitacion);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdHabitacion);
+    }
+
+    @PutMapping("/uploadPhoto/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> actualizarFoto(@PathVariable("id") Long habitacionId, @RequestPart("file") MultipartFile file) throws Exception {
+        Habitacion existingHabitacion = habitacionService.obtenerHabitacionPorId(habitacionId);
+        ImageManager imageManagerObject = new ImageManager();
+        String filename = file.getOriginalFilename();
+        int index = filename.lastIndexOf('.');
+        String extension = filename.substring(index + 1);
+        System.out.println("ESTA es la extension: "+extension);
+        boolean success = extension.equals("jpg") || extension.equals("jepg")? imageManagerObject.storeFile(file) : false;
+        if(success){
+            String url = "uploads/images/"+file.getOriginalFilename();
+            existingHabitacion.setImageUrl(url);
+            System.out.println(url);
+            Habitacion updated = habitacionService.actualizarHabitacion(existingHabitacion);
+            if(updated != null){
+                return ResponseEntity.status(HttpStatus.OK).body(updated);
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("NO SE PUDO ACTUALIZAR");
+            }
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -68,7 +96,6 @@ public class HabitacionController {
         existingHabitacion.setPrecioNoche(updatedHabitacionDTO.getPrecioNoche());
         existingHabitacion.setDisponible(updatedHabitacionDTO.isDisponible());
         existingHabitacion.setFechaUltimaMantenimiento(updatedHabitacionDTO.getFechaUltimaMantenimiento());
-
         Habitacion updated = habitacionService.actualizarHabitacion(existingHabitacion);
 
         if (updated != null) {
