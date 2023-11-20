@@ -19,6 +19,7 @@ import pe.edu.cibertec.ProyectoHotelero.repository.UserRepository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -133,10 +134,44 @@ public class PrincipalController {
     }
 
 
+//    @DeleteMapping("/deleteUser")
+//    public String deleteUser(@RequestParam String id){
+//        userRepository.deleteById(Long.parseLong(id));
+//        return "Se ha borrado el user con id".concat(id);
+//    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     @DeleteMapping("/deleteUser")
-    public String deleteUser(@RequestParam String id){
-        userRepository.deleteById(Long.parseLong(id));
-        return "Se ha borrado el user con id".concat(id);
+    public ResponseEntity<?> deleteUser(@RequestParam Long userId) {
+        Optional<UserEntity> userOptional = userRepository.findById(userId);
+
+        if (userOptional.isPresent()) {
+            UserEntity userEntity = userOptional.get();
+
+            // Encontrar el cliente asociado a este usuario
+            Cliente cliente = clienteRepository.findByUser(userEntity);
+
+            if (cliente != null) {
+                // Encontrar el contacto de emergencia asociado al cliente
+                ClienteEmergencyContact emergencyContact = clienteEmergencyContactRepository.findByCliente(cliente);
+
+                // Eliminar el contacto de emergencia si existe
+                if (emergencyContact != null) {
+                    clienteEmergencyContactRepository.delete(emergencyContact);
+                }
+
+                // Eliminar el cliente
+                clienteRepository.delete(cliente);
+            }
+
+            // Eliminar el usuario
+            userRepository.delete(userEntity);
+
+            return ResponseEntity.ok("Usuario y entidades relacionadas eliminadas correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ningún usuario con el ID proporcionado.");
+        }
     }
 
     @GetMapping("/getUsername")
