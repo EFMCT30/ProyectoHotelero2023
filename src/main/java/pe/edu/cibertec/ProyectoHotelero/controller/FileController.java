@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Controller
-@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 @RequestMapping("/uploads")
 public class FileController {
     private final Path fileStorageLocation = Paths.get("uploads/images");
