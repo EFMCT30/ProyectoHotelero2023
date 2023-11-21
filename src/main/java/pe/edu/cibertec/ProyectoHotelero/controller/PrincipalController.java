@@ -97,6 +97,18 @@ public class PrincipalController {
     @PostMapping("/createUser")
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
 
+        // Verificar si el nombre de usuario ya existe en la base de datos
+        if (userRepository.existsByUsername(createUserDTO.getUsername())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("El nombre de usuario ya está en uso");
+        }
+
+        // Verificar si el correo electrónico ya está en uso (opcional)
+        if (userRepository.existsByEmail(createUserDTO.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("El correo electrónico ya está en uso");
+        }
+
         Set<RoleEntity> roles = createUserDTO.getRoles().stream()
                 .map(role -> RoleEntity.builder()
                         .name(ERole.valueOf(role))
