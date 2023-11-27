@@ -136,7 +136,9 @@ public class ReservaService {
         return reservaRepository.findById(id).orElse(null);
     }
 
-    public void eliminarReserva(Long id) {
+
+//    no se elimina una reserva
+    public void eliminarReserva (Long id) {
         reservaRepository.deleteById(id);
     }
 

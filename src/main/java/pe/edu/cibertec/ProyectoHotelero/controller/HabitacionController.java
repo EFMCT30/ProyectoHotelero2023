@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 @RequestMapping("/habitaciones")
 public class HabitacionController {
 
@@ -67,6 +66,7 @@ public class HabitacionController {
         }
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteHabitacion(@PathVariable("id") Long habitacionId) {
         Habitacion habitacion = habitacionService.obtenerHabitacionPorId(habitacionId);
@@ -81,6 +81,7 @@ public class HabitacionController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PutMapping("/{habitacionId}")
     public ResponseEntity<?> actualizarHabitacion(@PathVariable Long habitacionId, @RequestBody HabitacionDTO updatedHabitacionDTO) {
         Habitacion existingHabitacion = habitacionService.obtenerHabitacionPorId(habitacionId);
@@ -105,6 +106,7 @@ public class HabitacionController {
         }
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/disponibles")
     public List<Habitacion> getHabitacionesDisponibles() {
         return habitacionService.getHabitacionesDisponibles();

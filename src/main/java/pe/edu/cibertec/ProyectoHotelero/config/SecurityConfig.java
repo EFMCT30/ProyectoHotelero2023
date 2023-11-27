@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/index").permitAll();
+                    auth.requestMatchers("/habitaciones").permitAll();
                     auth.requestMatchers("/uploads/**").permitAll();
                     // Permit access to /uploads/images/** for all users
                     auth.anyRequest().authenticated();
