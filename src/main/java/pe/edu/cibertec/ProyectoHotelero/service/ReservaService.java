@@ -37,39 +37,10 @@ public class ReservaService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-//    public ResponseEntity<String> crearReserva(ReservaDTO reservaDTO, HttpServletRequest request) {
-//        // Verificar si la habitación está disponible
-//        Habitacion habitacion = habitacionService.obtenerHabitacionPorId(reservaDTO.getHabitacionId());
-//        if (habitacion == null || !habitacion.isDisponible()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La habitación no está disponible");
-//        }
-//
-//        // Obtener el cliente desde el token
-//        Cliente cliente = getClienteFromToken(request);
-//        if (cliente == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se pudo obtener el cliente desde el token");
-//        }
-//
-//        // Crear la reserva
-//        Reserva reserva = new Reserva();
-//        reserva.setFechaInicio(reservaDTO.getFechaInicio());
-//        reserva.setFechaFin(reservaDTO.getFechaFin());
-//        reserva.setEstado("Pendiente"); // O establece el estado deseado
-//        reserva.setPrecioTotal(reservaDTO.getPrecioTotal());
-//        reserva.setCliente(cliente);
-//        reserva.setComentarios(reservaDTO.getComentarios());
-//
-//        // Cambiar el estado de la habitación a no disponible
-//        habitacion.setDisponible(false);
-//        habitacionService.actualizarHabitacion(habitacion);
-//
-//        // Agregar más validaciones y lógica de negocio aquí.
-//
-//        // Guardar la reserva en la base de datos
-//        reservaRepository.save(reserva);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body("Reserva creada con éxito");
-//    }
+
+    public List<Reserva> listarTodasLasReservas() {
+        return reservaRepository.findAll();
+    }
 
     public ResponseEntity<ReservaResponseDTO> crearReserva(ReservaDTO reservaDTO, HttpServletRequest request) {
         ReservaResponseDTO response;

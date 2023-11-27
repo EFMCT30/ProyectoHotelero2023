@@ -1,6 +1,7 @@
 package pe.edu.cibertec.ProyectoHotelero.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,12 +34,15 @@ public class Reserva {
         @Column(name = "fecha_creacion")
         private Timestamp fechaCreacion;
         private String comentarios;
+        @JsonIgnore
         @ManyToOne
         @JoinColumn(name = "cliente_id")
         private Cliente cliente;
+        @JsonIgnore
         @OneToMany(mappedBy = "reserva")
         private List<ReservaHabitacion> reservaHabitaciones;
 
+        @JsonIgnore
         @ManyToMany
         @JoinTable(
                 name = "reserva_huespedes",
