@@ -32,6 +32,16 @@ public class HabitacionController {
     }
 
 
+    @GetMapping("/xporid/{id}")
+    public ResponseEntity<Habitacion> obtenerHabitacionPorId(@PathVariable Long id) {
+        Habitacion habitacion = habitacionService.obtenerHabitacionPorId(id);
+        if (habitacion != null) {
+            return new ResponseEntity<>(habitacion, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> crearHabitacion(@RequestBody HabitacionDTO habitacion) {
@@ -48,7 +58,7 @@ public class HabitacionController {
         int index = filename.lastIndexOf('.');
         String extension = filename.substring(index + 1);
         System.out.println("ESTA es la extension: "+extension);
-        boolean success = extension.equals("jpg") || extension.equals("jepg")? imageManagerObject.storeFile(file) : false;
+        boolean success = extension.equals("jpg") || extension.equals("jpeg")? imageManagerObject.storeFile(file) : false;
         if(success){
             String url = "uploads/images/"+file.getOriginalFilename();
             existingHabitacion.setImageUrl(url);
