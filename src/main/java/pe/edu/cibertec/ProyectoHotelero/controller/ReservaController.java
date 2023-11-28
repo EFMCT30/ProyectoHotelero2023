@@ -29,16 +29,14 @@ public class ReservaController {
     private final ClienteService clienteService;
 
 
-
-
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/crearReserva")
     @Transactional
     public ResponseEntity<ReservaResponseDTO> crearReserva(@RequestBody ReservaDTO reservaDTO, HttpServletRequest request) {
         return reservaService.crearReserva(reservaDTO, request);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/listar")
     public ResponseEntity<List<Reserva>> listarTodasLasReservas() {
         List<Reserva> reservas = reservaService.listarTodasLasReservas();

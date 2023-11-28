@@ -32,7 +32,7 @@ public class Reserva {
         @Column(name = "precio_total")
         private BigDecimal precioTotal;
         @Column(name = "fecha_creacion")
-        private Timestamp fechaCreacion;
+        private Date fechaCreacion;
         private String comentarios;
         @JsonIgnore
         @ManyToOne
