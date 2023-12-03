@@ -43,5 +43,13 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
+    @PutMapping("/actualizar/{reservaId}")
+    public ResponseEntity<ReservaResponseDTO> actualizarReserva(
+            @PathVariable Long reservaId,
+            @RequestBody ReservaDTO reservaDTO,
+            HttpServletRequest request) {
+        return reservaService.actualizarReserva(reservaId, reservaDTO,request);
+    }
+
 
 }

@@ -7,23 +7,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
+
 import pe.edu.cibertec.ProyectoHotelero.dto.request.ReservaDTO;
 import pe.edu.cibertec.ProyectoHotelero.dto.response.ReservaResponseDTO;
 import pe.edu.cibertec.ProyectoHotelero.entity.Cliente;
 import pe.edu.cibertec.ProyectoHotelero.entity.Habitacion;
 import pe.edu.cibertec.ProyectoHotelero.entity.Reserva;
-import pe.edu.cibertec.ProyectoHotelero.entity.UserEntity;
-import pe.edu.cibertec.ProyectoHotelero.repository.ClienteRepository;
+
 import pe.edu.cibertec.ProyectoHotelero.repository.ReservaRepository;
-import pe.edu.cibertec.ProyectoHotelero.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Slf4j
+
 @Service
 @AllArgsConstructor
 public class ReservaService {
@@ -32,10 +34,9 @@ public class ReservaService {
     private final ReservaRepository reservaRepository;
     @Autowired
     private final HabitacionService habitacionService;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private ClienteService clienteService;
 
 
     public List<Reserva> listarTodasLasReservas() {
@@ -53,11 +54,12 @@ public class ReservaService {
         }
 
         // Obtener el cliente desde el token
-        Cliente cliente = getClienteFromToken(request);
+        Cliente cliente = clienteService.getClienteFromToken(request);
         if (cliente == null) {
-            response = new ReservaResponseDTO(null, "No se pudo obtener el cliente desde el token");
+            response = new ReservaResponseDTO(null, "No se pudo obtener  holas el cliente desde el token");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
+
 
         // Crear la reserva
         Reserva reserva = new Reserva();
@@ -82,25 +84,60 @@ public class ReservaService {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    public Cliente getClienteFromToken(HttpServletRequest request) {
-        // Obten el nombre de usuario (user_id) del token JWT actual
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    private final Logger logger = LoggerFactory.getLogger(ReservaService.class);
 
-        // Busca al cliente en la base de datos por el nombre de usuario (user_id)
-        Cliente cliente = clienteRepository.findByUserUsername(username);
+    public ResponseEntity<ReservaResponseDTO> actualizarReserva(Long reservaId, ReservaDTO reservaDTO, HttpServletRequest request) {
+        ReservaResponseDTO response;
 
-        // Si se encuentra el cliente, lo retornas; de lo contrario, puedes manejar el error como desees
-        if (cliente != null) {
-            return cliente;
-        } else {
-            return null;
+        // Obtener el cliente desde el token
+        Cliente cliente = clienteService.getClienteFromToken(request);
+        if (cliente == null) {
+            logger.error("No se pudo obtener el cliente desde el token");
+            response = new ReservaResponseDTO(null, "No se pudo obtener el cliente desde el token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
-    }
 
+        // Verificar si la reserva existe
+        Optional<Reserva> optionalReserva = reservaRepository.findById(reservaId);
+        if (optionalReserva.isEmpty()) {
+            logger.error("La reserva no existe");
+            response = new ReservaResponseDTO(null, "La reserva no existe");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
 
+        // Obtener la reserva existente
+        Reserva reserva = optionalReserva.get();
 
-    public List<Reserva> obtenerTodasLasReservas() {
-        return reservaRepository.findAll();
+        // Verificar si el cliente que está intentando actualizar la reserva es el propietario
+        if (!reserva.getCliente().equals(cliente)) {
+            logger.warn("Intento de actualización de reserva por un cliente no autorizado");
+            response = new ReservaResponseDTO(null, "No tienes permisos para actualizar esta reserva");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        // Verificar si la habitación está disponible (puedes omitir esto si no necesitas verificar la disponibilidad)
+        Habitacion habitacion = habitacionService.obtenerHabitacionPorId(reservaDTO.getHabitacionId());
+        if (habitacion == null || !habitacion.isDisponible()) {
+            logger.error("La habitación no está disponible");
+            response = new ReservaResponseDTO(null, "La habitación no está disponible");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        // Actualizar los campos de la reserva
+        reserva.setFechaInicio(reservaDTO.getFechaInicio());
+        reserva.setFechaFin(reservaDTO.getFechaFin());
+        reserva.setPrecioTotal(reservaDTO.getPrecioTotal());
+        reserva.setComentarios(reservaDTO.getComentarios());
+
+        // Actualizar más campos según sea necesario
+
+        // Guardar la reserva actualizada en la base de datos
+        reservaRepository.save(reserva);
+
+        // Construir la respuesta con el objeto ReservaDTO y un mensaje
+        response = new ReservaResponseDTO(reservaDTO, "Reserva actualizada con éxito");
+        logger.info("Reserva actualizada con éxito por el cliente: {}", cliente.getClienteId());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     public Reserva obtenerReservaPorId(Long id) {
@@ -108,10 +145,9 @@ public class ReservaService {
     }
 
 
-//    no se elimina una reserva
+    //    no se elimina una reserva
     public void eliminarReserva (Long id) {
         reservaRepository.deleteById(id);
     }
 
 }
-
